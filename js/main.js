@@ -1,6 +1,8 @@
 // In the future we want to store the deck id as local storage so that each time the application is refreshed, the deck ID stays the same. Homework
 
 let deckId = '';
+let cardcounterPlayerOne = 0;
+let cardcounterPlayerTwo = 0;
 
 fetch(`https://www.deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1`)
     .then(res => res.json()) // parse response as JSON
@@ -28,13 +30,14 @@ function drawTwo(){
       let player2Val = convertToNum(data.cards[1].value);
 
       if(player1Val > player2Val){
-        document.querySelector('h3').innerText = 'Player 1 Wins!';
+        document.getElementById('announce').innerText = 'Player 1 Wins!';
       }
       else if (player1Val < player2Val){
-        document.querySelector('h3').innerText = 'Player 2 Wins!';
-      }
+        document.getElementById('announce').innerText = 'Player 2 Wins!';
+    }
       else{
-        document.querySelector('h3').innerText = 'Time for War!';
+        document.getElementById('announce').innerText = 'Time for War!';
+        war();
       }
       
     })
@@ -60,4 +63,41 @@ function convertToNum(val){
   else{
     return Number(val)
   }
+}
+
+//we want war to flip one card for each player four times and take the value of the fourth pull and compare those. The person that wins the last flip takes all the cards (8)
+
+function war(){
+  const url = `https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=8`;
+
+  document.getElementById('warresults').innerHTML = "War Results"
+  document.getElementById('warplayer1').innerHTML = "Player 1"
+  document.getElementById('warplayer2').innerHTML = "Player 2"
+  
+  fetch(url)
+    .then(res => res.json()) // parse response as JSON
+    .then(data => {
+      
+      //define the value of player 1's card
+      let player1Val = convertToNum(data.cards[6].value)
+      //define the value of player 2's card
+      let player2Val = convertToNum(data.cards[7].value)
+
+      document.getElementById('player1war').src = data.cards[6].image;
+      document.getElementById('player2war').src = data.cards[7].image;
+
+      if(player1Val > player2Val){
+        document.getElementById('warannounce').innerText = 'Player 1 Wins!';
+      }
+      else if (player1Val < player2Val){
+        document.getElementById('warannounce').innerText = 'Player 2 Wins!';
+      }
+      else{
+        document.getElementById('warannounce').innerText = 'Time for War!';
+        war();
+      }
+    })
+    .catch(err => {
+        console.log(`error ${err}`)
+    });
 }
