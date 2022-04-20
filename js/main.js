@@ -31,15 +31,23 @@ function drawTwo(){
 
       if(player1Val > player2Val){
         document.getElementById('announce').innerText = 'Player 1 Wins!';
+        cardcounterPlayerOne ++;
       }
       else if (player1Val < player2Val){
         document.getElementById('announce').innerText = 'Player 2 Wins!';
-    }
+        cardcounterPlayerTwo ++;
+      }
       else{
         document.getElementById('announce').innerText = 'Time for War!';
         war();
       }
       
+
+      //figure out what to do when the card counter hits zero.
+      console.log(data.remaining)
+      if (data.remaining == 0){
+        calculateWinner();
+      }
     })
     .catch(err => {
         console.log(`error ${err}`)
@@ -88,9 +96,11 @@ function war(){
 
       if(player1Val > player2Val){
         document.getElementById('warannounce').innerText = 'Player 1 Wins!';
+        cardcounterPlayerOne +=8;
       }
       else if (player1Val < player2Val){
         document.getElementById('warannounce').innerText = 'Player 2 Wins!';
+        cardcounterPlayerTwo +=8;
       }
       else{
         document.getElementById('warannounce').innerText = 'Time for War!';
@@ -100,4 +110,16 @@ function war(){
     .catch(err => {
         console.log(`error ${err}`)
     });
+}
+
+function calculateWinner(){
+  if(cardcounterPlayerOne > cardcounterPlayerTwo){
+    console.log('Player 1 wins');
+  }
+  else if (cardcounterPlayerTwo > cardcounterPlayerOne){
+    console.log('Player 2 wins');
+  }
+  else{
+    console.log("Tie");
+  }
 }
